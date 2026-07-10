@@ -8,18 +8,25 @@
     effectId: string;
   }
 
+  // 两个相同 Buff，或异种 Buff 的第一个
+  // 顺序：↑, ↓, →, ←
+  const TELEPORT_BUFFS_MAIN = [
+    "130C",
+    "130D",
+    "130E",
+    "130F",
+  ];
+  // 仅用于异种 Buff 的第二个
+  const TELEPORT_BUFFS_SUB = [
+    "13D7",
+    "13D8",
+    "13D9",
+    "13DA",
+  ];
+
   const TELEPORT_BUFFS = [
-    // ↑, ↓, →, ←
-    // Low priority
-    "4876",
-    "4877",
-    "4878",
-    "4879",
-    // High priority
-    "5079",
-    "5080",
-    "5081",
-    "5082",
+    ...TELEPORT_BUFFS_MAIN,
+    ...TELEPORT_BUFFS_SUB,
   ];
 
   const triggerSet: TriggerSet<Data> = {
@@ -43,52 +50,58 @@
             return;
           }
 
-          let [buff1, buff2] = data.etnTeleportBuffs;
+          console.log(data.me, data.etnTeleportBuffs);
+          const [buff1, buff2] = data.etnTeleportBuffs;
           if (!buff1 || !buff2) {
+            console.error("传送 Buff 为空:", data.etnTeleportBuffs);
             return;
           }
 
-          if (buff1.effectId < buff2.effectId) {
-            [buff1, buff2] = [buff2, buff1];
-          }
-
-          const mainDir = TELEPORT_BUFFS.indexOf(buff1.effectId) - 4;
-          const subDir = TELEPORT_BUFFS.indexOf(buff2.effectId);
-
-          if (mainDir === subDir) {
-            switch (mainDir) {
-              case 0:
+          if (buff1.effectId === buff2.effectId) {
+            switch (buff1.effectId) {
+              case "130C":
                 return "Bird 然后 Bird 3";
-              case 1:
+              case "130D":
                 return "Dog 然后 Dog 1";
-              case 2:
-                return "C 然后 C 4";
-              case 3:
-                return "A 然后 A 2";
+              case "130E":
+                return "C 然后 C4";
+              case "130F":
+                return "A 然后 A2";
             }
           }
 
-          if (buff1.duration < buff2.duration) {
+          let mainDir = TELEPORT_BUFFS_MAIN.indexOf(buff1.effectId);
+          let mainDuration = buff1.duration;
+          if (mainDir === -1) {
+            mainDir = TELEPORT_BUFFS_MAIN.indexOf(buff2.effectId);
+            mainDuration = buff2.duration;
+          }
+          if (mainDir === -1) {
+            console.error("两个 Buff 都不是主 Buff:", buff1.effectId, buff2.effectId);
+            return;
+          }
+
+          if (mainDuration < 9) {
             switch (mainDir) {
               case 0:
-                return "2 然后 2 Bird";
+                return "3 然后 3C";
               case 1:
-                return "4 然后 4 Dog";
+                return "1 然后 1A";
               case 2:
-                return "3 然后 3  C";
+                return "4 然后 4 Dog";
               case 3:
-                return "1 然后 1 A";
+                return "2 然后 2 Bird";
             }
           } else {
             switch (mainDir) {
               case 0:
-                return "Bird 2 然后 2";
-              case 1:
-                return "Dog 4 然后 4";
-              case 2:
                 return "C3 然后 3";
-              case 3:
+              case 1:
                 return "A1 然后 1";
+              case 2:
+                return "Dog 4 然后 4";
+              case 3:
+                return "Bird 2 然后 2";
             }
           }
         },
