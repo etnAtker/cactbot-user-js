@@ -14,4 +14,5 @@ type RaidbossData = import('../cactbot/types/data').RaidbossData;
 type LooseTriggerSet = import('../cactbot/types/trigger').LooseTriggerSet;
 type TriggerSet<Data extends RaidbossData = RaidbossData> =
   import('../cactbot/types/trigger').TriggerSet<Data>;
+type Job = import('../cactbot/types/job').Job;
 
