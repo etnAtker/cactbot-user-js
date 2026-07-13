@@ -91,7 +91,7 @@
       };
       const myIndex = partyListSorted.indexOf(player);
       if (myIndex < 0 || myIndex > 7) {
-        console.error("索引超出范围:", myIndex, player, partyListSorted);
+        console.error("未找到自己:", myIndex, player, partyListSorted);
         return;
       }
 
@@ -287,8 +287,8 @@
     if (data.etnP2TowerCurrentTurn % 2 !== 0) {
       if (myMarker === "02CB")
         return basePrompt + `${leftOrRightTower}塔${leftOrRightTower}分摊`;
-      if (myMarker === "02CC") return basePrompt + `左塔下扇形`;
-      if (myMarker === "02CD") return basePrompt + `右塔左钢铁`;
+      if (myMarker === "02CC") return basePrompt + `右塔左钢铁`;
+      if (myMarker === "02CD") return basePrompt + `左塔下扇形`;
     } else {
       if (myMarker === "02CB")
         console.error(
@@ -296,8 +296,8 @@
           data.etnP2TowerTeam,
           data.etnP2HeadMarkers,
         );
-      if (myMarker === "02CC") return basePrompt + `左塔${leftOrRight}扇形`;
-      if (myMarker === "02CD") return basePrompt + `右塔${leftOrRight}钢铁`;
+      if (myMarker === "02CC") return basePrompt + `右塔${leftOrRight}钢铁`;
+      if (myMarker === "02CD") return basePrompt + `左塔${leftOrRight}扇形`;
     }
   };
 
@@ -414,6 +414,16 @@
         },
       },
       {
+        id: "DMU P2 HM判",
+        type: "HeadMarker",
+        netRegex: { id: "__DISABLED__" }
+      },
+      {
+        id: "DMU P2 没事干了",
+        type: "HeadMarker",
+        netRegex: { id: "__DISABLED__" }
+      },
+      {
         id: "EtnDMU P2 HeadMarker Collector",
         type: "HeadMarker",
         netRegex: { id: P2_HEAD_MARKER_IDS, capture: true },
@@ -446,18 +456,20 @@
         type: "HeadMarker",
         netRegex: { id: P2_HEAD_MARKER_IDS },
         condition: (data) => data.etnP2TowerCurrentTurn < 8,
-        delaySeconds: 0.3,
+        delaySeconds: (data) => [3, 5, 7].includes(data.etnP2TowerCurrentTurn) ? 5 : 0.3,
         suppressSeconds: 1,
         alertText: p2TowerAlertText,
+        durationSeconds: 10,
       },
       {
         id: "EtnDMU P2 Tower 8 TTS",
         type: "Ability",
-        netRegex: { id: "BABE", capture: true },
+        netRegex: { id: "BABE" },
         condition: (data) => data.etnP2TowerCurrentTurn === 8,
         delaySeconds: 0.3,
         suppressSeconds: 1,
         alertText: p2TowerAlertText,
+        durationSeconds: 10,
       },
     ],
   };
