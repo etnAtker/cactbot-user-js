@@ -259,18 +259,18 @@
     let leftOrRight = "";
     if (data.etnP2TowerCurrentTurn === 1) {
       if (myMarker === "02CC" || partnerMarker === "02CC") {
-        leftOrRightTower = "右";
+        leftOrRightTower = "右→";
       }
 
       if (myMarker === "02CD" || partnerMarker === "02CD") {
-        leftOrRightTower = "左";
+        leftOrRightTower = "左←";
       }
     } else if (data.etnP2TowerCurrentTurn === 4) {
       leftOrRight =
         jobPriority(data.party.jobName(data.me) ?? "NONE") <
         jobPriority(data.party.jobName(partner) ?? "NONE")
-          ? "左"
-          : "右";
+          ? "左←"
+          : "右→";
     } else {
       const playersInMyTeam = pick(data.etnP2Positions, (key) =>
         data.etnP2TowerTeam.includes(key),
@@ -278,8 +278,8 @@
       const sortedPlayers = p2TowerSortPosition(playersInMyTeam);
       leftOrRight =
         sortedPlayers.indexOf(data.me) > sortedPlayers.indexOf(partner)
-          ? "左"
-          : "右";
+          ? "左←"
+          : "右→";
       leftOrRightTower = leftOrRight;
     }
 
@@ -287,8 +287,8 @@
     if (data.etnP2TowerCurrentTurn % 2 !== 0) {
       if (myMarker === "02CB")
         return basePrompt + `${leftOrRightTower}塔${leftOrRightTower}分摊`;
-      if (myMarker === "02CC") return basePrompt + `右塔左钢铁`;
-      if (myMarker === "02CD") return basePrompt + `左塔下扇形`;
+      if (myMarker === "02CC") return basePrompt + `右→塔左←钢铁`;
+      if (myMarker === "02CD") return basePrompt + `左←塔下↓扇形`;
     } else {
       if (myMarker === "02CB")
         console.error(
@@ -296,8 +296,8 @@
           data.etnP2TowerTeam,
           data.etnP2HeadMarkers,
         );
-      if (myMarker === "02CC") return basePrompt + `右塔${leftOrRight}钢铁`;
-      if (myMarker === "02CD") return basePrompt + `左塔${leftOrRight}扇形`;
+      if (myMarker === "02CC") return basePrompt + `右→塔${leftOrRight}钢铁`;
+      if (myMarker === "02CD") return basePrompt + `左←塔${leftOrRight}扇形`;
     }
   };
 
