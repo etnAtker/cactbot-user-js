@@ -249,7 +249,7 @@
     if (!data.etnP2TowerMyTurns.includes(data.etnP2TowerCurrentTurn)) {
       const basePrompt = `${data.etnP2TowerCurrentTurn}轮闲人，`;
       if (data.etnP2TowerCurrentTurn % 2 !== 0) {
-        return `${basePrompt}塔外引导/分摊`;
+        return `${basePrompt}塔外处理`;
       } else {
         return `${basePrompt}分散引导踩头`;
       }
